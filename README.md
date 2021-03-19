@@ -14,6 +14,7 @@ Current version supports:
 ### Upcoming features
 - IPv6 CIDR support
 - [Named rules](https://github.com/terraform-aws-modules/terraform-aws-security-group/blob/master/rules.tf)
+- Tags
 
 
 ## Usage
