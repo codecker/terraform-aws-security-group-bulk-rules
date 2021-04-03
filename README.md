@@ -39,6 +39,7 @@ locals {
     3 = { type = "ingress", protocol = "tcp", from = 22,   to = 22,   source_type = "sg",   source = "sg-000000000", desc = "Inbound SSH from Security Group" },
     4 = { type = "ingress", protocol = "tcp", from = 8001, to = 8009, source_type = "self", source = true, desc = "Inbound service traffic from security group" },
     5 = { type = "egress",  protocol = "all",  from = -1,   to = -1,   source_type = "cidr", source = "0.0.0.0/0", desc = "Outbound all ports and protocols" },
+    6 = { type = "egress",  protocol = "icmp",  from = -1,   to = -1,   source_type = "sg", source = aws_security_group.differentSG.id, desc = "Outbound all ports and protocols" },
   }
 }
 
@@ -51,3 +52,12 @@ module "bulk-aws-security-groups-rules" {
 }
 
 ```
+
+## Managing larges rulesets
+
+Ideally all of our security groups should be only in code so we dont have to update documentation. The reality is that many companies still rely on spreadsheets to help them manage, review, and audit their infrastructure. This module can be (manually) powered by a master security group rule spreadsheet with a little bit of Excel formula "fun". This spreadsheet can have all the inbound and outbound rules that have been implemented in the environment and is easily consumed by auditors and management. This is obviously not the ideal state but one that many of us live in :)
+
+Below is an example format you could use as a template for this master spreadsheet, along with the Excel formula to create the Map input rules.
+
+| Security_group_name | Rule_id | Direction | Protocol | Port_from | Port_to | Source_dest_type | Source_or_dest | Description | TF_map_input |
+| ------------------- | ------- | --------- | -------- | --------- | ------- | ---------------- | -------------- | ----------- | ------------ |
